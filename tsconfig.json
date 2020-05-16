@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-thrift-caller": [
+        "dist/ngx-thrift-caller"
+      ],
+      "ngx-thrift-caller/*": [
+        "dist/ngx-thrift-caller/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

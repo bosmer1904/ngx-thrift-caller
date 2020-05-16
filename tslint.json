@@ -45,7 +45,6 @@
       true,
       "ignore-params"
     ],
-    "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-use-before-declare": true,
@@ -54,6 +53,18 @@
       true,
       "as-needed"
     ],
+    "no-unused-expression": [true, "allow-fast-null-checks"],
+    "variable-name": {
+      "options": [
+        "ban-keywords",
+        "allow-snake-case",
+        "allow-trailing-underscore",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-pascal-case"
+      ]
+    },
+    "prefer-const": [true, {"destructuring": "all"}],
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": [

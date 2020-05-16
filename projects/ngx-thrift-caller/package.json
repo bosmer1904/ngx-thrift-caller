@@ -1,0 +1,28 @@
+{
+  "author": "bosmer1904",
+  "name": "ngx-thrift-caller",
+  "version": "0.0.2",
+  "description": "Thrift caller for angular",
+  "peerDependencies": {
+    "@angular/common": ">=7.0.0",
+    "@angular/core": ">=7.0.0",
+    "@angular/platform-browser": ">=7.0.0",
+    "buffer": ">=5.0.0",
+    "rxjs": ">=6.0.0",
+    "thrift": "git+https://github.com/bosmer1904/thrift.git"
+  },
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bosmer1904/ngx-thrift-caller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bosmer1904/ngx-thrift-caller/issues"
+  },
+  "homepage": "https://github.com/bosmer1904/ngx-thrift-caller#readme",
+  "keywords": [
+    "thrift",
+    "thrift sevice",
+    "angular"
+  ]
+}
