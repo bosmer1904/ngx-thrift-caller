@@ -1,4 +1,5 @@
-#ngx-thrift-caller
+# ngx-thrift-caller
+
 Page on  [GitHub](https://github.com/bosmer1904/ngx-thrift-caller)
 [NPM](https://www.npmjs.com/package/ngx-thrift-caller)
 
