@@ -61,7 +61,7 @@ export class AngularXhrConnection {
       return this.send_buf;
     }
 
-    this.transferHttp.post(this.url, this.send_buf.buffer, {
+    this.transferHttp.post(this.url, this.send_buf, {
       headers: this.headers,
       responseType: 'arraybuffer',
       params: {

@@ -1,11 +1,17 @@
 import { ModuleWithProviders, NgModule, Optional, Provider, SkipSelf } from '@angular/core';
 import { TransferHttpService } from './http/transfer-http.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
 import { SeqIdInterceptor } from './http/seq-id-interceptor.';
+import { BufferHttpXhrBackend } from './http/backend';
 
 @NgModule({
   providers: [
     TransferHttpService,
+    BufferHttpXhrBackend,
+    {
+      provide: HttpBackend,
+      useExisting: BufferHttpXhrBackend
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SeqIdInterceptor,
