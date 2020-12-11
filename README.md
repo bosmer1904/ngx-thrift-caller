@@ -59,8 +59,15 @@ export function thriftCallerFactory(transferHttp: TransferHttpService): NgxThrif
   }
 
   let clients = {
-    USER: factory.getClient(UserService, '/user'),
-    PROJECT: factory.getClient(ProjectService, '/project')
+    USER: factory.getClient(UserService, {
+        path: '/user',
+        headers: {
+            'header-name': 'header-value'
+        }  
+    }),
+    PROJECT: factory.getClient(ProjectService, {
+      path: '/project'
+    })
   };
 
   return new NgxThriftCaller(factory, clients, callback, preRequest);

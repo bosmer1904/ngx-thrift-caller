@@ -1,5 +1,5 @@
 import { TClientConstructor, TProtocolConstructor, TTransportConstructor } from 'thrift';
-import { createClient, createConnection, UrlOptions } from './models';
+import { ConnectOptions, createClient, createConnection, UrlOptions } from './models';
 import { parseUrlToUrlOptions } from './utils';
 import { TransferHttpService } from '../http/transfer-http.service';
 
@@ -31,12 +31,12 @@ export class ClientFactory {
     this.createClient = clientType;
   }
 
-  getClient<TClient>(service: TClientConstructor<TClient>, path: string): TClient {
+  getClient<TClient>(service: TClientConstructor<TClient>, options: ConnectOptions): TClient {
     const connection = this.createConnection(this.transferHttp, this.url.host, this.url.port, {
       transport: this.transport,
       protocol: this.protocol,
       https: this.url.https,
-      path
+      ...options
     });
     return this.createClient(service, connection);
   }
