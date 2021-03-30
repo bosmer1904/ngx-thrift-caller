@@ -3,10 +3,10 @@ import { TransferHttpService } from './http/transfer-http.service';
 import { HTTP_INTERCEPTORS, HttpBackend } from '@angular/common/http';
 import { SeqIdInterceptor } from './http/seq-id-interceptor.';
 import { BufferHttpXhrBackend } from './http/backend';
+import { TRANSFER_CONFIG_TOKEN, TransferHttpServiceConfig } from './http/transfer-http-service-config';
 
 @NgModule({
   providers: [
-    TransferHttpService,
     BufferHttpXhrBackend,
     {
       provide: HttpBackend,
@@ -28,10 +28,14 @@ export class NgxThriftCallerModule {
     }
   }
 
-  static forRoot(ThriftService: Provider): ModuleWithProviders<NgxThriftCallerModule> {
+  static forRoot(ThriftService: Provider, config?: TransferHttpServiceConfig): ModuleWithProviders<NgxThriftCallerModule> {
     return {
       ngModule: NgxThriftCallerModule,
-      providers: [ThriftService]
+      providers: [
+        ThriftService,
+        { provide: TRANSFER_CONFIG_TOKEN, useValue: config},
+        TransferHttpService
+      ]
     };
   }
 

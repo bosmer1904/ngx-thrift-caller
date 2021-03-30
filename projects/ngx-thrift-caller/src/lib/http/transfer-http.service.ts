@@ -1,18 +1,24 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TransferState, StateKey, makeStateKey } from '@angular/platform-browser';
 import { Observable, from } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { TRANSFER_CONFIG_TOKEN, TransferHttpServiceConfig } from './transfer-http-service-config';
 
 // @dynamic
 @Injectable()
 export class TransferHttpService {
+
+  private readonly isServer: boolean;
+
   constructor(
     private transferState: TransferState,
     private httpClient: HttpClient,
     @Inject(PLATFORM_ID) private platformId: object,
+    @Optional() @Inject(TRANSFER_CONFIG_TOKEN) private config: TransferHttpServiceConfig
   ) {
+    this.isServer = isPlatformServer(this.platformId);
   }
 
   post<T>(
@@ -61,8 +67,12 @@ export class TransferHttpService {
       url = uri.url;
     }
 
-    const tempKey =
+    let tempKey =
       url + (body ? JSON.stringify(body) : '');
+
+    if (this.isServer && this.config) {
+      tempKey = tempKey.replace(this.config.privateUrl, this.config.publicUrl);
+    }
     const key = makeStateKey<T>(tempKey);
 
     try {
@@ -73,7 +83,7 @@ export class TransferHttpService {
           const dataArray = new Uint8Array(data);
           // @ts-ignore
           dataArray.seqid = data.seqid;
-          if (isPlatformServer(this.platformId)) {
+          if (this.isServer) {
             if (options.responseType === 'arraybuffer') {
               this.setCache<T>(key, dataArray);
             } else {
