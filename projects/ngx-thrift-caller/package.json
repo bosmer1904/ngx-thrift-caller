@@ -1,7 +1,7 @@
 {
   "author": "bosmer1904",
   "name": "ngx-thrift-caller",
-  "version": "0.0.4",
+  "version": "0.0.5-beta.1",
   "description": "Thrift caller for angular",
   "peerDependencies": {
     "@angular/common": ">=7.0.0",
