@@ -73,18 +73,25 @@ export function thriftCallerFactory(transferHttp: TransferHttpService): NgxThrif
   return new NgxThriftCaller(factory, clients, callback, preRequest);
 }
 ```
-Then in **app.module.ts** import **NgxThriftCallerModule.forRoot()** with providing NgxThriftCaller via our factory
+Then in **app.module.ts** import **NgxThriftCallerModule.forRoot()** with providing NgxThriftCaller via our factory.
+Second parameter of **NgxThriftCallerModule.forRoot()** is optional. It`s contains config for separate api urls to use in StateKey for TransferState: SSR (privateUrl) and CSR(publicUrl). 
 
 ```typescript
+const publicApi = 'https://example.public.api';
+const privateApi = 'https://example.private.api';
+
 @NgModule({
   imports: [
     BrowserModule.withServerTransition({ appId: 'my-app' }),
     HttpClientModule,
     NgxThriftCallerModule.forRoot({
-         provide: NgxThriftCaller,
-         useFactory: thriftCallerFactory,
-         deps: [TransferHttpService]
-    })
+        provide: NgxThriftCaller,
+        useFactory: thriftCallerFactory,
+        deps: [TransferHttpService]
+    }, {
+        publicUrl: publicApi,
+        privateUrl: privateApi
+   })
   ]
 })
 ```
