@@ -73,6 +73,16 @@ export function thriftCallerFactory(transferHttp: TransferHttpService): NgxThrif
   return new NgxThriftCaller(factory, clients, callback, preRequest);
 }
 ```
+If you want to use base64 encoding, you should add the header ```Content-Transfer-Encoding: base64``` to your thrift client like this:
+```typescript
+USER: factory.getClient(UserService, {
+        path: '/user',
+        headers: {
+            'Content-Transfer-Encoding': 'base64'
+        }  
+    })
+```
+
 Then in **app.module.ts** import **NgxThriftCallerModule.forRoot()** with providing NgxThriftCaller via our factory.
 Second parameter of **NgxThriftCallerModule.forRoot()** is optional. It`s contains config for separate api urls to use in StateKey for TransferState: SSR (privateUrl) and CSR(publicUrl). 
 

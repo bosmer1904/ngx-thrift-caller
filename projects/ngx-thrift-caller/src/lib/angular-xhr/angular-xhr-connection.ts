@@ -3,6 +3,7 @@ import { Buffer } from 'buffer';
 import { InputBufferUnderrunError, SeqId2Service, Thrift, TProtocolConstructor, TTransportConstructor } from 'thrift';
 import { ConnectOptions } from '../thrift/models';
 import { TransferHttpService } from '../http/transfer-http.service';
+import { SeqidHttpResponse } from '../http/seqid-http-response';
 
 export class AngularXhrConnection {
 
@@ -10,8 +11,8 @@ export class AngularXhrConnection {
   public wpos: number;
   public rpos: number;
   public useCORS: boolean;
-  public send_buf: Uint8Array;
-  public recv_buf: Uint8Array;
+  public send_buf: Buffer;
+  public recv_buf: Buffer;
   public transport: TTransportConstructor;
   public protocol: TProtocolConstructor;
   public headers: {
@@ -60,20 +61,38 @@ export class AngularXhrConnection {
     if (this.url === undefined || this.url === '') {
       return this.send_buf;
     }
-
-    this.transferHttp.post(this.url, this.send_buf, {
-      headers: this.headers,
-      responseType: 'arraybuffer',
-      params: {
-        seqid: this.seqid
-      }
-    }).subscribe(response => {
-      // seqid gets from XHR from seq-id-interceptor.ts
-      this.setRecvBuffer(response, (response as {seqid: number}).seqid);
-    }, error => {
-      console.error(error);
-    });
-
+    if (this.headers['Content-Transfer-Encoding'] === 'base64') {
+      const req = this.send_buf.toString('base64');
+      this.transferHttp.post<SeqidHttpResponse<string>>(this.url, req, {
+        headers: this.headers,
+        responseType: 'json',
+        params: {
+          seqid: this.seqid
+        }
+      }).subscribe((
+      response => {
+        const seqid = response.seqid;
+        const buffer = Buffer.from(response.body, 'base64');
+        // seqid gets from XHR from seq-id-interceptor.ts
+        this.setRecvBuffer(buffer, seqid);
+      }), (
+      error => {
+        console.error(error);
+      }));
+    } else {
+      this.transferHttp.post(this.url, this.send_buf, {
+        headers: this.headers,
+        responseType: 'arraybuffer',
+        params: {
+          seqid: this.seqid
+        }
+      }).subscribe(response => {
+        // seqid gets from XHR from seq-id-interceptor.ts
+        this.setRecvBuffer(response, (response as { seqid: number }).seqid);
+      }, error => {
+        console.error(error);
+      });
+    }
   }
 
   setRecvBuffer(buf, seqid): void {
@@ -158,17 +177,17 @@ export class AngularXhrConnection {
     }
   }
 
-  readAll(): Uint8Array {
+  readAll(): Buffer {
     return this.recv_buf;
   }
 
-  write(buf: Uint8Array, seqid): void {
+  write(buf: Buffer, seqid): void {
     this.send_buf = buf;
     this.seqid = seqid;
     this.flush();
   }
 
-  getSendBuffer(): Uint8Array {
+  getSendBuffer(): Buffer {
     return this.send_buf;
   }
 }

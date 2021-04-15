@@ -37,7 +37,7 @@ export class TransferHttpService {
             [param: string]: string | string[];
           };
       reportProgress?: boolean;
-      responseType?: 'json' | 'arraybuffer';
+      responseType?: 'text' | 'arraybuffer' | 'json';
       withCredentials?: boolean;
     },
   ): Observable<T> {
@@ -80,11 +80,11 @@ export class TransferHttpService {
     } catch (e) {
       return callback(method, uri, body, options).pipe(
         tap((data) => {
-          const dataArray = new Uint8Array(data);
-          // @ts-ignore
-          dataArray.seqid = data.seqid;
           if (this.isServer) {
             if (options.responseType === 'arraybuffer') {
+              const dataArray = new Uint8Array(data);
+              // @ts-ignore
+              dataArray.seqid = data.seqid;
               this.setCache<T>(key, dataArray);
             } else {
               this.setCache<T>(key, data);
@@ -105,10 +105,15 @@ export class TransferHttpService {
     if (isPlatformBrowser(this.platformId)) {
       this.transferState.remove(key);
     }
-    const arrayData = new Uint8Array(Object.keys(data).map(e => data[e]));
-    // for put seqid to response
-    (arrayData as Uint8Array & {seqid: number}).seqid = data.seqid;
-    return from(Promise.resolve(arrayData));
+    // body set by seqid interceptor
+    if (!data.body) {
+      const arrayData = new Uint8Array(Object.keys(data).map(e => data[e]));
+      // for put seqid to response
+      (arrayData as Uint8Array & {seqid: number}).seqid = data.seqid;
+      return from(Promise.resolve(arrayData));
+    } else {
+      return from(Promise.resolve(data));
+    }
   }
 
   private setCache<T>(key: StateKey<T>, data): void {
