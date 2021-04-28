@@ -2,6 +2,7 @@ import { TClientConstructor, TProtocolConstructor, TTransportConstructor } from 
 import { ConnectOptions, createClient, createConnection, UrlOptions } from './models';
 import { parseUrlToUrlOptions } from './utils';
 import { TransferHttpService } from '../http/transfer-http.service';
+import { HttpClient } from '@angular/common/http';
 
 export class ClientFactory {
   transport: TTransportConstructor;
@@ -9,9 +10,9 @@ export class ClientFactory {
   url: UrlOptions;
   createConnection: createConnection;
   createClient: createClient;
-  transferHttp: TransferHttpService;
+  transferHttp: TransferHttpService | HttpClient;
 
-  constructor(transferHttp: TransferHttpService,
+  constructor(transferHttp: TransferHttpService | HttpClient,
               transport: TTransportConstructor,
               protocol: TProtocolConstructor,
               connectionType: createConnection,

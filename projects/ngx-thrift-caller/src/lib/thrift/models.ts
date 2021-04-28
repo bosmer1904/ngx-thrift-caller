@@ -1,7 +1,9 @@
 import { TProtocolConstructor, TTransportConstructor } from 'thrift';
 import { TransferHttpService } from '../http/transfer-http.service';
+import { HttpClient } from '@angular/common/http';
 
-export type createConnection = (transferHttp: TransferHttpService, host: string, port: number, options?: ConnectOptions) => any;
+export type createConnection = (transferHttp: TransferHttpService | HttpClient,
+                                host: string, port: number, options?: ConnectOptions) => any;
 export type createClient = (client, connection) => any;
 
 export interface UrlOptions {

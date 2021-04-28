@@ -23,6 +23,7 @@ In `package.json`
 
 First create factory for **NgxThriftCaller**
 ```typescript
+import { HttpClient } from '@angular/common/http';
 import { TBinaryProtocol, TBufferedTransport } from 'thrift';
 import {
   ClientFactory,
@@ -34,7 +35,7 @@ import {
 } from 'ngx-thrift-caller';
 import { UserService, ProjectService } from 'path-to-your-thrift';
 
-export function thriftCallerFactory(transferHttp: TransferHttpService): NgxThriftCaller {
+export function thriftCallerFactory(transferHttp: TransferHttpService | HttpClient): NgxThriftCaller {
 
   let url: UrlOptions = {host: '127.0.0.1', port: 92, https: false};
   /* OR 

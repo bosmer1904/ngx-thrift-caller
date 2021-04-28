@@ -61,7 +61,7 @@ export class AngularXhrConnection {
     if (this.url === undefined || this.url === '') {
       return this.send_buf;
     }
-    if (this.headers['Content-Transfer-Encoding'] === 'base64') {
+    if (this.headers && this.headers['Content-Transfer-Encoding'] === 'base64') {
       const req = this.send_buf.toString('base64');
       this.transferHttp.post<SeqidHttpResponse<string>>(this.url, req, {
         headers: this.headers,
